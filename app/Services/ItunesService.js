@@ -14,7 +14,7 @@ let _subscribers = {
 
 // @ts-ignore
 let _songApi = axios.create({
-    baseURL: 'https://itunes.apple.com/search?callback=?&term='
+    baseURL: '//itunes.apple.com/search?callback=?&term='
 })
 
 // @ts-ignore
@@ -36,7 +36,7 @@ export default class ItunesService {
     }
 
     get MySongs() {
-        return _state.mySongs
+        return _state.mySongs.map(s => new Song(s))
     }
 
     //NOTE adds the subscriber function to the array based on the property it is watching
@@ -45,7 +45,7 @@ export default class ItunesService {
     }
 
     getMusicByQuery(query) {
-        var url = 'https://itunes.apple.com/search?callback=?&term=' + query;
+        var url = '//itunes.apple.com/search?callback=?&term=' + query;
         // @ts-ignore
         $.getJSON(url)
             .then(res => {
@@ -58,7 +58,19 @@ export default class ItunesService {
     getPlaylist() {
         _sandBox.get()
             .then(res => {
-                console.log(res.data.data)
+                _setState('mySongs', res.data.data)
+            })
+    }
+
+    addSong(title) {
+        let song = _state.apiSongs.find(s => s.title == title)
+        _sandBox.post('', song)
+            .then(res => {
+                _state.mySongs.push(new Song(res.data.data))
+                _setState('mySongs', _state.mySongs)
+            })
+            .catch(err => {
+                console.error(err)
             })
     }
 }

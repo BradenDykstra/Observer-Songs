@@ -39,4 +39,8 @@ export default class ItunesController {
         e.preventDefault();
         _itunesService.getMusicByQuery(e.target.query.value)
     }
+
+    addSong(title) {
+        _itunesService.addSong(title)
+    }
 }
