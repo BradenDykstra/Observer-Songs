@@ -2,13 +2,25 @@ import Song from "../Models/Song.js";
 
 //Private
 let _state = {
-    songs: []
+    apiSongs: [],
+    mySongs: []
 }
 
 //NOTE methods to run when a given property in state changes
 let _subscribers = {
-    songs: []
+    apiSongs: [],
+    mySongs: []
 }
+
+// @ts-ignore
+let _songApi = axios.create({
+    baseURL: 'https://itunes.apple.com/search?callback=?&term='
+})
+
+// @ts-ignore
+let _sandBox = axios.create({
+    baseURL: '//bcw-sandbox.herokuapp.com/api/Braden/songs'
+})
 
 function _setState(propName, data) {
     //NOTE add the data to the state
@@ -19,10 +31,13 @@ function _setState(propName, data) {
 
 //Public
 export default class ItunesService {
-    get Songs() {
-        return _state.songs
+    get ApiSongs() {
+        return _state.apiSongs
     }
 
+    get MySongs() {
+        return _state.mySongs
+    }
 
     //NOTE adds the subscriber function to the array based on the property it is watching
     addSubscriber(propName, fn) {
@@ -35,8 +50,15 @@ export default class ItunesService {
         $.getJSON(url)
             .then(res => {
                 let results = res.results.map(rawData => new Song(rawData))
-                _setState('songs', results)
+                _setState('apiSongs', results)
             })
             .catch(err => console.log(err))
+    }
+
+    getPlaylist() {
+        _sandBox.get()
+            .then(res => {
+                console.log(res.data.data)
+            })
     }
 }
