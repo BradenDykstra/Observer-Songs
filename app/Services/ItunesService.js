@@ -50,6 +50,8 @@ export default class ItunesService {
         $.getJSON(url)
             .then(res => {
                 let results = res.results.map(rawData => new Song(rawData))
+                console.log(results);
+
                 _setState('apiSongs', results)
             })
             .catch(err => console.log(err))
@@ -63,8 +65,7 @@ export default class ItunesService {
     }
 
     addSong(title) {
-        let song = _state.apiSongs.find(s => s.title == title)
-        _sandBox.post('', song)
+        _sandBox.post('', _state.apiSongs.find(s => s.title == title))
             .then(res => {
                 _state.mySongs.push(new Song(res.data.data))
                 _setState('mySongs', _state.mySongs)

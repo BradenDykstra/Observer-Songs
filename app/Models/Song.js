@@ -1,11 +1,11 @@
 export default class Song {
     constructor(data) {
-        this.title = data.trackName
+        this.title = data.trackName || data.title
         this.albumArt = data.albumArt || data.artworkUrl100.replace(/100x100/g, "300x300")
-        this.artist = data.artistName
-        this.collection = data.collectionName
-        this.price = data.trackPrice
-        this.preview = data.previewUrl
+        this.artist = data.artistName || data.artist
+        this.collection = data.collectionName || data.collection
+        this.price = data.trackPrice || data.price
+        this.preview = data.previewUrl || data.preview
         this.user = data.user
     }
 
